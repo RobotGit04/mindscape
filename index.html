@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mindscape — Visualise Your Thoughts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <!-- ── Input screen ──────────────────────────────────────── -->
+  <div id="inputScreen" class="screen active">
+    <div class="input-bg">
+      <div class="grid-lines"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="input-content">
+      <div class="brand">
+        <svg class="brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="4" fill="currentColor"/>
+          <circle cx="14" cy="4"  r="2.5" fill="currentColor" opacity="0.6"/>
+          <circle cx="14" cy="24" r="2.5" fill="currentColor" opacity="0.6"/>
+          <circle cx="4"  cy="14" r="2.5" fill="currentColor" opacity="0.6"/>
+          <circle cx="24" cy="14" r="2.5" fill="currentColor" opacity="0.6"/>
+          <circle cx="6"  cy="6"  r="2"   fill="currentColor" opacity="0.35"/>
+          <circle cx="22" cy="6"  r="2"   fill="currentColor" opacity="0.35"/>
+          <circle cx="6"  cy="22" r="2"   fill="currentColor" opacity="0.35"/>
+          <circle cx="22" cy="22" r="2"   fill="currentColor" opacity="0.35"/>
+          <line x1="14" y1="10" x2="14" y2="6.5"  stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <line x1="14" y1="18" x2="14" y2="21.5" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <line x1="10" y1="14" x2="6.5" y2="14"  stroke="currentColor" stroke-width="1" opacity="0.4"/>
+          <line x1="18" y1="14" x2="21.5" y2="14" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+        </svg>
+        <span class="brand-name">Mindscape</span>
+      </div>
+
+      <h1 class="headline">Dump your thoughts.<br/><em>Watch them connect.</em></h1>
+      <p class="subhead">Paste anything — tasks, worries, ideas, plans. AI maps the structure underneath.</p>
+
+      <div class="input-box">
+        <textarea id="dumpInput" class="dump-input"
+          placeholder="reply to Priya, finish ML assignment by Friday, haven't exercised, pay electricity bill, call mom, fix login bug, book dentist, review Arjun's PR..."
+          maxlength="2500"></textarea>
+        <div class="input-controls">
+          <div class="input-meta">
+            <span id="charCount">0</span><span class="char-max">/2500</span>
+            <span class="hint">⌘↵ to map</span>
+          </div>
+          <div class="example-chips">
+            <button class="chip" onclick="fillExample('work')">Work</button>
+            <button class="chip" onclick="fillExample('life')">Life</button>
+            <button class="chip" onclick="fillExample('student')">Student</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="map-btn" id="mapBtn" onclick="handleSubmit()">
+          <span class="map-btn-text">Map my thoughts</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="demo-btn" onclick="loadDemo()">Try demo →</button>
+        <button class="restore-btn hidden" id="restoreBtn" onclick="restoreGraph()">↩ Restore last session</button>
+      </div>
+
+      <div class="key-row">
+        <span class="key-label">Gemini API key</span>
+        <input type="password" id="apiKeyInline" class="key-input" placeholder="AIza…" autocomplete="off"/>
+        <button class="key-save" onclick="saveInlineKey()">Save</button>
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="key-link">Get free key →</a>
+      </div>
+      <p id="keyStatus" class="key-status"></p>
+    </div>
+  </div>
+
+  <!-- ── Canvas screen ─────────────────────────────────────── -->
+  <div id="canvasScreen" class="screen">
+
+    <header class="topbar">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+          <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        New dump
+      </button>
+
+      <div class="view-tabs">
+        <button class="vtab active" id="tabMindmap" onclick="switchView('mindmap')">Mind map</button>
+        <button class="vtab"        id="tabCluster" onclick="switchView('cluster')">Clusters</button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" class="search-icon">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Find a node…" oninput="handleSearch(this.value)"/>
+        <button class="search-clear hidden" id="searchClear" onclick="clearSearch()">✕</button>
+      </div>
+
+      <!-- Priority filter -->
+      <div class="priority-filter">
+        <button class="pf-btn active" data-p="all"     onclick="setPriorityFilter('all',this)">All</button>
+        <button class="pf-btn"        data-p="urgent"  onclick="setPriorityFilter('urgent',this)">🔴 Urgent</button>
+        <button class="pf-btn"        data-p="normal"  onclick="setPriorityFilter('normal',this)">🟡 Normal</button>
+        <button class="pf-btn"        data-p="someday" onclick="setPriorityFilter('someday',this)">⚪ Someday</button>
+      </div>
+
+      <div class="topbar-right">
+        <button class="icon-btn" onclick="resetZoom()" title="Fit to screen">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </button>
+        <button class="icon-btn" onclick="exportSVG()" title="Export SVG">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="icon-btn" onclick="exportJSON()" title="Export JSON">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M4 2h6l3 3v9H4V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M10 2v3h3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M6 9h4M6 11.5h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="canvas-wrap">
+      <svg id="graphSVG"></svg>
+
+      <!-- Stats ribbon -->
+      <div class="stats-ribbon" id="statsRibbon"></div>
+
+      <!-- Loading overlay -->
+      <div class="canvas-loading" id="canvasLoading">
+        <div class="pulse-ring"></div>
+        <p class="loading-msg" id="loadingMsg">Mapping connections…</p>
+        <p class="loading-sub" id="loadingSub"></p>
+      </div>
+    </div>
+
+    <!-- Node detail panel -->
+    <div class="node-panel" id="nodePanel">
+      <div class="panel-header">
+        <div class="panel-dot" id="panelDot"></div>
+        <span class="panel-category" id="panelCategory"></span>
+        <span class="panel-priority" id="panelPriority"></span>
+        <button class="panel-close" onclick="closePanel()">✕</button>
+      </div>
+      <h3 class="panel-title" id="panelTitle"></h3>
+      <div class="panel-tags" id="panelTags"></div>
+      <p class="panel-connections" id="panelConnections"></p>
+      <div class="panel-related" id="panelRelated"></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend" id="legend"></div>
+
+    <!-- Toast -->
+    <div class="toast hidden" id="toast">
+      <span class="toast-icon">⚠</span>
+      <span id="toastMsg"></span>
+      <button onclick="dismissToast()">✕</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/examples.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/graph.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
