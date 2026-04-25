@@ -11,6 +11,9 @@ function fillExample(type) {
   updateCharCount();
   ta.focus();
   ta.style.transition = 'background 0.3s';
-  ta.style.background = 'rgba(124,106,247,0.05)';
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  ta.style.background = isDark ? 'rgba(124,106,247,0.05)' : 'rgba(91,33,182,0.04)';
   setTimeout(() => ta.style.background = '', 500);
+  // Pre-warm in background for faster submit
+  setTimeout(() => prewarmExample(type), 300);
 }

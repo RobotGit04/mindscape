@@ -92,10 +92,6 @@ async function callGemini(dump) {
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-function updateLoadingMsg(msg) {
-  const el = document.getElementById('loadingMsg');
-  if (el) el.textContent = msg;
-}
 
 // ── Parse + sanitise ─────────────────────────────────────────
 function parseGraph(raw) {

@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "C:\\Users\\linga\\Documents\\mindscape",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

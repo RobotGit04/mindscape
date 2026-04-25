@@ -1,187 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mindscape — Visualise Your Thoughts</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Inconsolata:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style.css"/>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
 
-  <!-- ── Input screen ──────────────────────────────────────── -->
-  <div id="inputScreen" class="screen active">
-    <div class="input-bg">
-      <div class="grid-lines"></div>
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/12.12.1/firebase-app-compat.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/12.12.1/firebase-auth-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-firestore-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-functions-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-messaging-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-storage-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-analytics-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-remote-config-compat.js"></script>
+    <script defer src="/__/firebase/12.12.1/firebase-performance-compat.js"></script>
+    <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+    <style media="screen">
+      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      @media (max-width: 600px) {
+        body, #message { margin-top: 0; background: white; box-shadow: none; }
+        body { border-top: 16px solid #ffa100; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message">
+      <h2>Welcome</h2>
+      <h1>Firebase Hosting Setup Complete</h1>
+      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
+      <a target="_blank" rel="noopener" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
     </div>
-    <div class="input-content">
-      <div class="brand">
-        <svg class="brand-icon" width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <circle cx="14" cy="14" r="4" fill="currentColor"/>
-          <circle cx="14" cy="4"  r="2.5" fill="currentColor" opacity="0.6"/>
-          <circle cx="14" cy="24" r="2.5" fill="currentColor" opacity="0.6"/>
-          <circle cx="4"  cy="14" r="2.5" fill="currentColor" opacity="0.6"/>
-          <circle cx="24" cy="14" r="2.5" fill="currentColor" opacity="0.6"/>
-          <circle cx="6"  cy="6"  r="2"   fill="currentColor" opacity="0.35"/>
-          <circle cx="22" cy="6"  r="2"   fill="currentColor" opacity="0.35"/>
-          <circle cx="6"  cy="22" r="2"   fill="currentColor" opacity="0.35"/>
-          <circle cx="22" cy="22" r="2"   fill="currentColor" opacity="0.35"/>
-          <line x1="14" y1="10" x2="14" y2="6.5"  stroke="currentColor" stroke-width="1" opacity="0.4"/>
-          <line x1="14" y1="18" x2="14" y2="21.5" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-          <line x1="10" y1="14" x2="6.5" y2="14"  stroke="currentColor" stroke-width="1" opacity="0.4"/>
-          <line x1="18" y1="14" x2="21.5" y2="14" stroke="currentColor" stroke-width="1" opacity="0.4"/>
-        </svg>
-        <span class="brand-name">Mindscape</span>
-      </div>
+    <p id="load">Firebase SDK Loading&hellip;</p>
 
-      <h1 class="headline">Dump your thoughts.<br/><em>Watch them connect.</em></h1>
-      <p class="subhead">Paste anything — tasks, worries, ideas, plans. AI maps the structure underneath.</p>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const loadEl = document.querySelector('#load');
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.firestore().doc('/foo/bar').get().then(() => { });
+        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        // firebase.analytics(); // call to activate
+        // firebase.analytics().logEvent('tutorial_completed');
+        // firebase.performance(); // call to activate
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
 
-      <div class="input-box">
-        <textarea id="dumpInput" class="dump-input"
-          placeholder="reply to Priya, finish ML assignment by Friday, haven't exercised, pay electricity bill, call mom, fix login bug, book dentist, review Arjun's PR..."
-          maxlength="2500"></textarea>
-        <div class="input-controls">
-          <div class="input-meta">
-            <span id="charCount">0</span><span class="char-max">/2500</span>
-            <span class="hint">⌘↵ to map</span>
-          </div>
-          <div class="example-chips">
-            <button class="chip" onclick="fillExample('work')">Work</button>
-            <button class="chip" onclick="fillExample('life')">Life</button>
-            <button class="chip" onclick="fillExample('student')">Student</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="cta-row">
-        <button class="map-btn" id="mapBtn" onclick="handleSubmit()">
-          <span class="map-btn-text">Map my thoughts</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <button class="demo-btn" onclick="loadDemo()">Try demo →</button>
-        <button class="restore-btn hidden" id="restoreBtn" onclick="restoreGraph()">↩ Restore last session</button>
-      </div>
-
-      <div class="key-row">
-        <span class="key-label">Gemini API key</span>
-        <input type="password" id="apiKeyInline" class="key-input" placeholder="AIza…" autocomplete="off"/>
-        <button class="key-save" onclick="saveInlineKey()">Save</button>
-        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="key-link">Get free key →</a>
-      </div>
-      <p id="keyStatus" class="key-status"></p>
-    </div>
-  </div>
-
-  <!-- ── Canvas screen ─────────────────────────────────────── -->
-  <div id="canvasScreen" class="screen">
-
-    <header class="topbar">
-      <button class="back-btn" onclick="goBack()">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-          <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        New dump
-      </button>
-
-      <div class="view-tabs">
-        <button class="vtab active" id="tabMindmap" onclick="switchView('mindmap')">Mind map</button>
-        <button class="vtab"        id="tabCluster" onclick="switchView('cluster')">Clusters</button>
-      </div>
-
-      <!-- Search -->
-      <div class="search-wrap">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" class="search-icon">
-          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/>
-          <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-        </svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Find a node…" oninput="handleSearch(this.value)"/>
-        <button class="search-clear hidden" id="searchClear" onclick="clearSearch()">✕</button>
-      </div>
-
-      <!-- Priority filter -->
-      <div class="priority-filter">
-        <button class="pf-btn active" data-p="all"     onclick="setPriorityFilter('all',this)">All</button>
-        <button class="pf-btn"        data-p="urgent"  onclick="setPriorityFilter('urgent',this)">🔴 Urgent</button>
-        <button class="pf-btn"        data-p="normal"  onclick="setPriorityFilter('normal',this)">🟡 Normal</button>
-        <button class="pf-btn"        data-p="someday" onclick="setPriorityFilter('someday',this)">⚪ Someday</button>
-      </div>
-
-      <div class="topbar-right">
-        <button class="icon-btn" onclick="resetZoom()" title="Fit to screen">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
-            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/>
-          </svg>
-        </button>
-        <button class="icon-btn" onclick="exportSVG()" title="Export SVG">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-            <path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-        <button class="icon-btn" onclick="exportJSON()" title="Export JSON">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-            <path d="M4 2h6l3 3v9H4V2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-            <path d="M10 2v3h3" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-            <path d="M6 9h4M6 11.5h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-    </header>
-
-    <div class="canvas-wrap">
-      <svg id="graphSVG"></svg>
-
-      <!-- Stats ribbon -->
-      <div class="stats-ribbon" id="statsRibbon"></div>
-
-      <!-- Loading overlay -->
-      <div class="canvas-loading" id="canvasLoading">
-        <div class="pulse-ring"></div>
-        <p class="loading-msg" id="loadingMsg">Mapping connections…</p>
-        <p class="loading-sub" id="loadingSub"></p>
-      </div>
-    </div>
-
-    <!-- Node detail panel -->
-    <div class="node-panel" id="nodePanel">
-      <div class="panel-header">
-        <div class="panel-dot" id="panelDot"></div>
-        <span class="panel-category" id="panelCategory"></span>
-        <span class="panel-priority" id="panelPriority"></span>
-        <button class="panel-close" onclick="closePanel()">✕</button>
-      </div>
-      <h3 class="panel-title" id="panelTitle"></h3>
-      <div class="panel-tags" id="panelTags"></div>
-      <p class="panel-connections" id="panelConnections"></p>
-      <div class="panel-related" id="panelRelated"></div>
-    </div>
-
-    <!-- Legend -->
-    <div class="legend" id="legend"></div>
-
-    <!-- Toast -->
-    <div class="toast hidden" id="toast">
-      <span class="toast-icon">⚠</span>
-      <span id="toastMsg"></span>
-      <button onclick="dismissToast()">✕</button>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/examples.js"></script>
-  <script src="js/gemini.js"></script>
-  <script src="js/graph.js"></script>
-  <script src="js/app.js"></script>
-</body>
+        try {
+          let app = firebase.app();
+          let features = [
+            'auth', 
+            'database', 
+            'firestore',
+            'functions',
+            'messaging', 
+            'storage', 
+            'analytics', 
+            'remoteConfig',
+            'performance',
+          ].filter(feature => typeof app[feature] === 'function');
+          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
+        } catch (e) {
+          console.error(e);
+          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+        }
+      });
+    </script>
+  </body>
 </html>
